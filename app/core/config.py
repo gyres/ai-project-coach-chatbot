@@ -17,7 +17,7 @@ class Settings:
     openai_model: str = "gpt-5.4-nano"
     app_host: str = "0.0.0.0"
     app_port: int = 3000
-    system_prompt_path: Path = BASE_DIR / "data" / "system_prompt.txt"
+    system_prompt_path: Path = BASE_DIR / "prompts" / "system_prompt.txt"
 
 
 @lru_cache

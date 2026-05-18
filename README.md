@@ -10,7 +10,7 @@ The project was built to demonstrate backend application structure, OpenAI API i
 
 ## Features
 
-- FastAPI backend with a clean controller, service, model, schema, and dependency structure
+- FastAPI backend with a clean router, service, model, schema, and dependency structure
 - OpenAI Responses API integration for AI-generated coaching replies
 - Custom system prompt that guides the assistant to act as an AI Project Coach
 - Session-based chat handling using signed browser sessions
@@ -67,17 +67,19 @@ The chatbot can help users:
     │   ├── __init__.py
     │   ├── config.py
     │   └── dependencies.py
-    ├── controllers/
+    ├── routers/
     │   ├── __init__.py
-    │   └── chat_controller.py
+    │   └── chat_router.py
     ├── models/
     │   ├── __init__.py
-    │   ├── chat.py
-    │   └── schemas.py
+    │   └── chat.py
+    ├── schemas/
+    │   ├── __init__.py
+    │   └── chat_schema.py
     ├── services/
     │   ├── __init__.py
     │   └── chat_service.py
-    ├── data/
+    ├── prompts/
     │   └── system_prompt.txt
     ├── static/
     │   └── style.css
@@ -90,10 +92,10 @@ The chatbot can help users:
 The application follows a simple layered architecture.
 
 1. `main.py` creates and configures the FastAPI application.
-2. `chat_controller.py` defines the web routes and API endpoints.
+2. `chat_router.py` defines the web routes and API endpoints.
 3. `chat_service.py` handles the main business logic and OpenAI API call.
 4. `chat.py` stores chat messages in memory.
-5. `schemas.py` defines request and response models using Pydantic.
+5. `chat_schema.py` defines request and response models using Pydantic.
 6. `system_prompt.txt` defines how the assistant should behave.
 7. `chat.html` and `style.css` provide the browser-based chat interface.
 

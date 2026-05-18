@@ -3,8 +3,8 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
-from app.controllers.chat_controller import router as chat_router
 from app.core.config import BASE_DIR, get_settings
+from app.routers.chat_router import router as chat_router
 
 
 def create_app() -> FastAPI:

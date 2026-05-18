@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 
 from app.core.config import BASE_DIR
 from app.core.dependencies import get_chat_service
-from app.models.schemas import CreateChatResponse, SendMessageRequest, SendMessageResponse
+from app.schemas.chat_schema import CreateChatResponse, SendMessageRequest, SendMessageResponse
 from app.services.chat_service import ChatService
 
 
