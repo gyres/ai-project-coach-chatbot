@@ -102,24 +102,29 @@ The application follows a simple layered architecture.
 ### 1. Clone the repository
 
 ```powershell
-git clone https://github.com/your-username/ai-project-coach-chatbot.git
+git clone https://github.com/gyres/ai-project-coach-chatbot.git
 cd ai-project-coach-chatbot
 ```
 
-### 2. Create or activate your Conda environment
+### 2. Create the Conda environment
+
+The recommended setup method is to use the provided `environment.yml` file:
 
 ```powershell
+conda env create -f environment.yml
 conda activate ai-project-coach-chatbot
 ```
 
-If you are creating a new environment, you can use:
+If the environment already exists and you want to update it:
 
 ```powershell
-conda create -n ai-project-coach-chatbot python
+conda env update -f environment.yml --prune
 conda activate ai-project-coach-chatbot
 ```
 
-### 3. Install dependencies
+### 3. Alternative setup using pip
+
+If you prefer to use an existing Python environment, install dependencies with:
 
 ```powershell
 pip install -r requirements.txt
