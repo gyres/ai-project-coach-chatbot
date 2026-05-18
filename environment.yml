@@ -1,0 +1,13 @@
+name: ai-project-coach-chatbot
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - pip
+  - fastapi
+  - uvicorn
+  - python-dotenv
+  - itsdangerous
+  - jinja2
+  - pytest
+  - openai

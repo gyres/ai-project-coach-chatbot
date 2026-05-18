@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Project Coach</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <h1>AI Project Coach</h1>
+        <p>Ask me to explain, debug, refactor, or improve your coding project step by step.</p>
+    </div>
+    <div class="suggestions">
+        <button class="suggestion-btn" onclick="usePrompt('Explain my FastAPI project structure like I am a beginner.')">
+            Explain Project Structure
+        </button>
+
+        <button class="suggestion-btn" onclick="usePrompt('Suggest how I can refactor this project step by step.')">
+            Refactor Guide
+        </button>
+
+        <button class="suggestion-btn" onclick="usePrompt('Help me turn this project into a stronger AI engineering portfolio project.')">
+            Portfolio Ideas
+        </button>
+    </div>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <div class="input-container">
+            <div class="input-wrapper">
+                <input type="text" id="message-input" placeholder="Ask me about your Python, FastAPI, or OpenAI API project...">
+            </div>
+            <button onclick="sendMessage()">Send</button>
+            <button id="new-chat-btn" onclick="startNewChat()">New Chat</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesContainer = document.getElementById('messages');
+        const messageInput = document.getElementById('message-input');
+        let currentChatId = null;
+
+        // Start a chat automatically when the page loads
+        document.addEventListener('DOMContentLoaded', startNewChat);
+
+        function startNewChat() {
+            fetch('/api/create_chat', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                currentChatId = data.chat_id;
+                messagesContainer.innerHTML = '';
+            })
+            .catch(() => {
+                alert('Error creating chat');
+            });
+        }
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            appendMessage('user', message);
+            messageInput.value = '';
+
+            const loadingMessage = appendMessage('assistant', 'Thinking...');
+
+            // Send to server
+            fetch('/api/send_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: currentChatId,
+                    message: message
+                })
+            })
+            .then(async response => {
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Something went wrong');
+                }
+
+                loadingMessage.innerHTML = formatMessage(data.message);
+            })
+            .catch(error => {
+                loadingMessage.innerHTML = formatMessage(`Error: ${error.message}`);
+            });
+        }
+
+        function usePrompt(prompt) {
+            messageInput.value = prompt;
+            sendMessage();
+        }
+
+        function appendMessage(role, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            messageDiv.innerHTML = formatMessage(content);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return messageDiv;
+        }
+
+        function formatMessage(content) {
+            return content
+                .split(/(```[\s\S]*?```)/g)
+                .map(part => {
+                    if (part.startsWith('```')) {
+                        const code = part
+                            .replace(/^```[a-zA-Z0-9_-]*\n?/, '')
+                            .replace(/```$/, '');
+
+                        return `<pre><code>${escapeHTML(code)}</code></pre>`;
+                    }
+
+                    return formatTextBlock(part);
+                })
+                .join('');
+        }
+
+        function formatTextBlock(text) {
+            const lines = text.split('\n');
+            let html = '';
+            let listType = null;
+
+            function closeList() {
+                if (listType) {
+                    html += `</${listType}>`;
+                    listType = null;
+                }
+            }
+
+            for (const rawLine of lines) {
+                const line = rawLine.trim();
+
+                if (!line) {
+                    closeList();
+                    continue;
+                }
+
+                if (line.startsWith('## ')) {
+                    closeList();
+                    html += `<h2>${formatInline(line.slice(3))}</h2>`;
+                    continue;
+                }
+
+                if (line.startsWith('### ')) {
+                    closeList();
+                    html += `<h3>${formatInline(line.slice(4))}</h3>`;
+                    continue;
+                }
+
+                if (line.startsWith('- ')) {
+                    if (listType !== 'ul') {
+                        closeList();
+                        html += '<ul>';
+                        listType = 'ul';
+                    }
+
+                    html += `<li>${formatInline(line.slice(2))}</li>`;
+                    continue;
+                }
+
+                const numberedItem = line.match(/^\d+\.\s+(.*)$/);
+                if (numberedItem) {
+                    if (listType !== 'ol') {
+                        closeList();
+                        html += '<ol>';
+                        listType = 'ol';
+                    }
+
+                    html += `<li>${formatInline(numberedItem[1])}</li>`;
+                    continue;
+                }
+
+                closeList();
+                html += `<p>${formatInline(line)}</p>`;
+            }
+
+            closeList();
+            return html;
+        }
+
+        function formatInline(text) {
+            const safeText = escapeHTML(text);
+
+            return safeText
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>');
+        }
+
+        function escapeHTML(text) {
+            return text
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        // Handle Enter key
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
