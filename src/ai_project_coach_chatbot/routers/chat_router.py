@@ -4,10 +4,14 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from app.core.config import BASE_DIR
-from app.core.dependencies import get_chat_service
-from app.schemas.chat_schema import CreateChatResponse, SendMessageRequest, SendMessageResponse
-from app.services.chat_service import ChatService
+from ai_project_coach_chatbot.core.config import BASE_DIR
+from ai_project_coach_chatbot.core.dependencies import get_chat_service
+from ai_project_coach_chatbot.schemas.chat_schema import (
+    CreateChatResponse,
+    SendMessageRequest,
+    SendMessageResponse,
+)
+from ai_project_coach_chatbot.services.chat_service import ChatService
 
 
 router = APIRouter()

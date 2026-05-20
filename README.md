@@ -49,7 +49,7 @@ The chatbot can help users:
 ## Project Structure
 
 ```text
-.
+ai-project-coach-chatbot
 ├── README.md
 ├── requirements.txt
 ├── environment.yml
@@ -60,31 +60,32 @@ The chatbot can help users:
 │   └── screenshot.png
 ├── tests/
 │   └── test_chat_manager.py
-└── app/
-    ├── __init__.py
-    ├── main.py
-    ├── core/
-    │   ├── __init__.py
-    │   ├── config.py
-    │   └── dependencies.py
-    ├── routers/
-    │   ├── __init__.py
-    │   └── chat_router.py
-    ├── models/
-    │   ├── __init__.py
-    │   └── chat.py
-    ├── schemas/
-    │   ├── __init__.py
-    │   └── chat_schema.py
-    ├── services/
-    │   ├── __init__.py
-    │   └── chat_service.py
-    ├── prompts/
-    │   └── system_prompt.txt
-    ├── static/
-    │   └── style.css
-    └── templates/
-        └── chat.html
+└── src/
+    └── ai_project_coach_chatbot/
+        ├── __init__.py
+        ├── main.py
+        ├── core/
+        │   ├── __init__.py
+        │   ├── config.py
+        │   └── dependencies.py
+        ├── routers/
+        │   ├── __init__.py
+        │   └── chat_router.py
+        ├── models/
+        │   ├── __init__.py
+        │   └── chat.py
+        ├── schemas/
+        │   ├── __init__.py
+        │   └── chat_schema.py
+        ├── services/
+        │   ├── __init__.py
+        │   └── chat_service.py
+        ├── prompts/
+        │   └── system_prompt.txt
+        ├── static/
+        │   └── style.css
+        └── templates/
+            └── chat.html
 ```
 
 ## How It Works
@@ -153,7 +154,8 @@ Do not commit your real `.env` file to GitHub.
 Run the FastAPI app with Uvicorn:
 
 ```powershell
-python -m uvicorn app.main:app --reload --port 3000
+$env:PYTHONPATH = "src"
+python -m uvicorn ai_project_coach_chatbot.main:app --reload --port 3000
 ```
 
 Then open your browser and go to:
@@ -165,10 +167,11 @@ http://127.0.0.1:3000
 You can also run the app through Python:
 
 ```powershell
-python -m app.main
+$env:PYTHONPATH = "src"
+python -m ai_project_coach_chatbot.main
 ```
 
-When running through `python -m app.main`, the app will use `APP_HOST` and `APP_PORT` from your `.env` file or the default values in `config.py`.
+When running through `python -m ai_project_coach_chatbot.main`, the app will use `APP_HOST` and `APP_PORT` from your `.env` file or the default values in `config.py`.
 
 ## Running Tests
 
@@ -178,7 +181,7 @@ Run:
 python -m pytest
 ```
 
-The `pytest.ini` file adds the project root to the Python path and tells pytest to look inside the `tests` folder.
+The `pytest.ini` file adds the src folder to the Python path and tells pytest to look inside the `tests` folder.
 
 ## Environment Variables
 
@@ -187,8 +190,8 @@ The `pytest.ini` file adds the project root to the Python path and tells pytest 
 | `OPENAI_API_KEY` | Yes | Your OpenAI API key |
 | `OPENAI_MODEL` | No | The OpenAI model used by the chatbot |
 | `SESSION_SECRET_KEY` | Yes | Secret key used for signed browser sessions |
-| `APP_HOST` | No | Host used when running the app through `python -m app.main` |
-| `APP_PORT` | No | Port used when running the app through `python -m app.main` |
+| `APP_HOST` | No | Host used when running the app through `python -m ai_project_coach_chatbot.main` |
+| `APP_PORT` | No | Port used when running the app through `python -m ai_project_coach_chatbot.main` |
 
 ## Example Prompts
 

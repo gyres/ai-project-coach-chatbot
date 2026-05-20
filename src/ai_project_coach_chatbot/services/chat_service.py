@@ -3,8 +3,8 @@ from pathlib import Path
 
 from openai import OpenAI, OpenAIError
 
-from app.core.config import Settings
-from app.models.chat import ChatManager
+from ai_project_coach_chatbot.core.config import Settings
+from ai_project_coach_chatbot.models.chat import ChatManager
 
 
 class ChatService:

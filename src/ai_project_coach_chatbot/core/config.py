@@ -6,8 +6,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
-BASE_DIR = Path(__file__).resolve().parents[1]      # app/
-PROJECT_ROOT = BASE_DIR.parent                      # repo root
+BASE_DIR = Path(__file__).resolve().parents[1]      # src/ai_project_coach_chatbot
+PROJECT_ROOT = BASE_DIR.parents[1]                  # repo root
 
 
 @dataclass(frozen=True)

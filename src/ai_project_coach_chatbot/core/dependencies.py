@@ -1,7 +1,7 @@
 from functools import lru_cache
 
-from app.core.config import get_settings
-from app.services.chat_service import ChatService
+from ai_project_coach_chatbot.core.config import get_settings
+from ai_project_coach_chatbot.services.chat_service import ChatService
 
 
 @lru_cache

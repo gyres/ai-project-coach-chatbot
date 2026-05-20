@@ -1,6 +1,6 @@
 import pytest
 
-from app.models.chat import ChatManager
+from ai_project_coach_chatbot.models.chat import ChatManager
 
 
 def test_create_chat():

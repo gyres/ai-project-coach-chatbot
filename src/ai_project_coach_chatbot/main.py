@@ -3,8 +3,8 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
-from app.core.config import BASE_DIR, get_settings
-from app.routers.chat_router import router as chat_router
+from ai_project_coach_chatbot.core.config import BASE_DIR, get_settings
+from ai_project_coach_chatbot.routers.chat_router import router as chat_router
 
 
 def create_app() -> FastAPI:
@@ -35,7 +35,7 @@ app = create_app()
 if __name__ == "__main__":
     settings = get_settings()
     uvicorn.run(
-        "app.main:app",
+        "ai_project_coach_chatbot.main:app",
         host=settings.app_host,
         port=settings.app_port,
         reload=True,
