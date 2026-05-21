@@ -160,7 +160,7 @@ Then update the `.env` file with your own values:
 
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-5.4-nano
+OPENAI_MODEL=your_chat_model_name_here
 SESSION_SECRET_KEY=replace_with_a_random_secret_key
 APP_HOST=0.0.0.0
 APP_PORT=3000
@@ -281,7 +281,7 @@ The `pytest.ini` file adds the `src` folder to the Python path and tells pytest 
 | Variable | Required | Description |
 |---|---:|---|
 | `OPENAI_API_KEY` | Yes | Your OpenAI API key |
-| `OPENAI_MODEL` | No | The OpenAI model used by the chatbot |
+| `OPENAI_MODEL` | Yes | The OpenAI model used by the chatbot |
 | `SESSION_SECRET_KEY` | Yes | Secret key used for signed browser sessions |
 | `APP_HOST` | No | Host used when running the app through `python -m ai_project_coach_chatbot.main` |
 | `APP_PORT` | No | Port used when running the app through `python -m ai_project_coach_chatbot.main` |
