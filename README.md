@@ -2,7 +2,7 @@
 
 AI Project Coach Chatbot is a FastAPI web chatbot that helps beginner developers understand, debug, refactor, and improve coding projects step by step.
 
-The project was built to demonstrate backend application structure, OpenAI API integration, session-based chat handling, frontend rendering, environment configuration, and basic automated testing.
+The project was built to demonstrate backend application structure, OpenAI API integration, session-based chat handling, frontend rendering, environment configuration, Docker-based local deployment, and basic automated testing.
 
 ## Screenshot
 
@@ -19,6 +19,7 @@ The project was built to demonstrate backend application structure, OpenAI API i
 - Markdown-like response formatting for headings, bullet points, numbered lists, inline code, and code blocks
 - Environment variable management using `.env`
 - Safe public configuration using `.env.example`
+- Docker and Docker Compose support for containerized local deployment
 - Basic pytest configuration for backend tests
 
 ## Demo Use Cases
@@ -45,12 +46,17 @@ The chatbot can help users:
 - itsdangerous
 - pytest
 - Conda
+- Docker
+- Docker Compose
 
 ## Project Structure
 
 ```text
 ai-project-coach-chatbot
 ├── README.md
+├── Dockerfile
+├── docker-compose.yml
+├── .dockerignore
 ├── requirements.txt
 ├── environment.yml
 ├── pytest.ini
@@ -99,28 +105,29 @@ The application follows a simple layered architecture.
 5. `chat_schema.py` defines request and response models using Pydantic.
 6. `system_prompt.txt` defines how the assistant should behave.
 7. `chat.html` and `style.css` provide the browser-based chat interface.
+8. `Dockerfile` and `docker-compose.yml` allow the app to run inside a Docker container.
 
 ## Setup Instructions
 
 ### 1. Clone the repository
 
-```powershell
+```bash
 git clone https://github.com/gyres/ai-project-coach-chatbot.git
 cd ai-project-coach-chatbot
 ```
 
 ### 2. Create the Conda environment
 
-The recommended setup method is to use the provided `environment.yml` file:
+The recommended local setup method is to use the provided `environment.yml` file:
 
-```powershell
+```bash
 conda env create -f environment.yml
 conda activate ai-project-coach-chatbot
 ```
 
 If the environment already exists and you want to update it:
 
-```powershell
+```bash
 conda env update -f environment.yml --prune
 conda activate ai-project-coach-chatbot
 ```
@@ -129,7 +136,7 @@ conda activate ai-project-coach-chatbot
 
 If you prefer to use an existing Python environment, install dependencies with:
 
-```powershell
+```bash
 pip install -r requirements.txt
 ```
 
@@ -137,7 +144,19 @@ pip install -r requirements.txt
 
 Create a `.env` file in the project root.
 
-Use `.env.example` as a guide:
+Git Bash:
+
+```bash
+cp .env.example .env
+```
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Then update the `.env` file with your own values:
 
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
@@ -149,9 +168,17 @@ APP_PORT=3000
 
 Do not commit your real `.env` file to GitHub.
 
-## Running the App
+## Running the App Locally
 
-Run the FastAPI app with Uvicorn:
+Run the FastAPI app with Uvicorn.
+
+Git Bash:
+
+```bash
+PYTHONPATH=src python -m uvicorn ai_project_coach_chatbot.main:app --reload --port 3000
+```
+
+PowerShell:
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -164,7 +191,15 @@ Then open your browser and go to:
 http://127.0.0.1:3000
 ```
 
-You can also run the app through Python:
+You can also run the app through Python.
+
+Git Bash:
+
+```bash
+PYTHONPATH=src python -m ai_project_coach_chatbot.main
+```
+
+PowerShell:
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -173,15 +208,73 @@ python -m ai_project_coach_chatbot.main
 
 When running through `python -m ai_project_coach_chatbot.main`, the app will use `APP_HOST` and `APP_PORT` from your `.env` file or the default values in `config.py`.
 
+## Running with Docker
+
+This project can also be run with Docker.
+
+Docker is useful because it runs the app in a containerized environment without requiring users to manually create a Conda environment.
+
+### 1. Make sure Docker Desktop is running
+
+Before running the Docker commands, start Docker Desktop on your computer.
+
+### 2. Build the Docker image
+
+```bash
+docker build -t ai-project-coach-chatbot .
+```
+
+### 3. Run the Docker container
+
+```bash
+docker run --env-file .env -p 3000:3000 ai-project-coach-chatbot
+```
+
+Then open your browser and go to:
+
+```text
+http://127.0.0.1:3000
+```
+
+### 4. Stop the Docker container
+
+Press:
+
+```text
+Ctrl + C
+```
+
+## Running with Docker Compose
+
+Docker Compose is the simpler recommended Docker method for this project.
+
+Run:
+
+```bash
+docker compose up --build
+```
+
+Then open your browser and go to:
+
+```text
+http://127.0.0.1:3000
+```
+
+To stop and remove the container:
+
+```bash
+docker compose down
+```
+
 ## Running Tests
 
 Run:
 
-```powershell
+```bash
 python -m pytest
 ```
 
-The `pytest.ini` file adds the src folder to the Python path and tells pytest to look inside the `tests` folder.
+The `pytest.ini` file adds the `src` folder to the Python path and tells pytest to look inside the `tests` folder.
 
 ## Environment Variables
 
@@ -210,41 +303,19 @@ Help me turn this project into a stronger AI engineering portfolio project.
 ```
 
 ```text
-Why do we separate controllers, services, models, and schemas?
+Why do we separate routers, services, models, and schemas?
 ```
-
-## What I Learned
-
-This project helped me practise:
-
-- Building a FastAPI web application
-- Structuring backend code into maintainable layers
-- Using environment variables safely
-- Connecting a backend service to the OpenAI API
-- Managing simple browser sessions
-- Creating a custom AI assistant with a system prompt
-- Rendering chatbot responses in a frontend interface
-- Writing basic tests for backend logic
-- Preparing a project for GitHub portfolio presentation
 
 ## Current Limitations
 
-This is a learning and portfolio project, not a production system.
-
-Limitations:
-
+- This is a learning and portfolio project, not a production system.
 - Chat history is stored in memory and resets when the server restarts.
 - There is no user login or account system.
 - There is no database yet.
 - The frontend uses plain JavaScript instead of a modern frontend framework.
 - The app does not currently support file uploads.
 - The app does not currently stream responses token by token.
-
-## Security Notes
-
-The real `.env` file should never be committed to GitHub.
-
-Only `.env.example` should be included in the public repository. The example file shows the required environment variable names without exposing real secrets.
+- The Docker setup is intended for local development and portfolio demonstration, not production deployment.
 
 ## License
 
