@@ -107,7 +107,15 @@ The application follows a simple layered architecture.
 7. `chat.html` and `style.css` provide the browser-based chat interface.
 8. `Dockerfile` and `docker-compose.yml` allow the app to run inside a Docker container.
 
-## Setup Instructions
+## Setup
+
+You can run this project using one of the following methods:
+
+1. Docker with `docker-compose.yml`, recommended for the fastest reproducible setup.
+2. Conda with `environment.yml`, recommended if you are using Anaconda or Miniconda.
+3. Pip with `requirements.txt`, useful for standard Python virtual environments.
+
+The commands below use Git Bash as the main terminal. PowerShell alternatives are shown only when the command syntax is different.
 
 ### 1. Clone the repository
 
@@ -116,33 +124,9 @@ git clone https://github.com/gyres/ai-project-coach-chatbot.git
 cd ai-project-coach-chatbot
 ```
 
-### 2. Create the Conda environment
+### 2. Create the environment variables file
 
-The recommended local setup method is to use the provided `environment.yml` file:
-
-```bash
-conda env create -f environment.yml
-conda activate ai-project-coach-chatbot
-```
-
-If the environment already exists and you want to update it:
-
-```bash
-conda env update -f environment.yml --prune
-conda activate ai-project-coach-chatbot
-```
-
-### 3. Alternative setup using pip
-
-If you prefer to use an existing Python environment, install dependencies with:
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Create your `.env` file
-
-Create a `.env` file in the project root.
+Create a `.env` file from the provided `.env.example` file.
 
 Git Bash:
 
@@ -156,7 +140,7 @@ PowerShell:
 Copy-Item .env.example .env
 ```
 
-Then update the `.env` file with your own values:
+Then open the `.env` file and update the values:
 
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
@@ -168,9 +152,60 @@ APP_PORT=3000
 
 Do not commit your real `.env` file to GitHub.
 
-## Running the App Locally
+### 3. Choose one setup option
 
-Run the FastAPI app with Uvicorn.
+You only need to choose one of the setup options below.
+
+- Choose **Option A** if you want to run the project with Docker.
+- Choose **Option B** if you use Conda for Python environments.
+- Choose **Option C** if you prefer pip or an existing Python environment.
+
+#### Option A: Run with Docker
+
+This is the simplest option if Docker Desktop is already installed and running.
+
+Run the app with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+To stop and remove the container:
+
+```bash
+docker compose down
+```
+
+Alternative Docker command without Docker Compose:
+
+```bash
+docker build -t ai-project-coach-chatbot .
+docker run --env-file .env -p 3000:3000 ai-project-coach-chatbot
+```
+
+To stop the running Docker container, press:
+
+```text
+Ctrl + C
+```
+
+#### Option B: Run with conda
+
+Create the Conda environment from `environment.yml`:
+
+```bash
+conda env create -f environment.yml
+conda activate ai-project-coach-chatbot
+```
+
+If the environment already exists and you want to update it:
+
+```bash
+conda env update -f environment.yml --prune
+conda activate ai-project-coach-chatbot
+```
+
+Run the FastAPI app.
 
 Git Bash:
 
@@ -185,85 +220,35 @@ $env:PYTHONPATH = "src"
 python -m uvicorn ai_project_coach_chatbot.main:app --reload --port 3000
 ```
 
-Then open your browser and go to:
+#### Option C: Run with pip
 
-```text
-http://127.0.0.1:3000
+Install dependencies using `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
 ```
 
-You can also run the app through Python.
+Run the FastAPI app.
 
 Git Bash:
 
 ```bash
-PYTHONPATH=src python -m ai_project_coach_chatbot.main
+PYTHONPATH=src python -m uvicorn ai_project_coach_chatbot.main:app --reload --port 3000
 ```
 
 PowerShell:
 
 ```powershell
 $env:PYTHONPATH = "src"
-python -m ai_project_coach_chatbot.main
+python -m uvicorn ai_project_coach_chatbot.main:app --reload --port 3000
 ```
 
-When running through `python -m ai_project_coach_chatbot.main`, the app will use `APP_HOST` and `APP_PORT` from your `.env` file or the default values in `config.py`.
+### 4. Open the application
 
-## Running with Docker
-
-This project can also be run with Docker.
-
-Docker is useful because it runs the app in a containerized environment without requiring users to manually create a Conda environment.
-
-### 1. Make sure Docker Desktop is running
-
-Before running the Docker commands, start Docker Desktop on your computer.
-
-### 2. Build the Docker image
-
-```bash
-docker build -t ai-project-coach-chatbot .
-```
-
-### 3. Run the Docker container
-
-```bash
-docker run --env-file .env -p 3000:3000 ai-project-coach-chatbot
-```
-
-Then open your browser and go to:
+After starting the app with Docker, Conda, or pip, open your browser and go to:
 
 ```text
 http://127.0.0.1:3000
-```
-
-### 4. Stop the Docker container
-
-Press:
-
-```text
-Ctrl + C
-```
-
-## Running with Docker Compose
-
-Docker Compose is the simpler recommended Docker method for this project.
-
-Run:
-
-```bash
-docker compose up --build
-```
-
-Then open your browser and go to:
-
-```text
-http://127.0.0.1:3000
-```
-
-To stop and remove the container:
-
-```bash
-docker compose down
 ```
 
 ## Running Tests
@@ -281,8 +266,8 @@ The `pytest.ini` file adds the `src` folder to the Python path and tells pytest 
 | Variable | Required | Description |
 |---|---:|---|
 | `OPENAI_API_KEY` | Yes | Your OpenAI API key |
-| `OPENAI_MODEL` | Yes | The OpenAI model used by the chatbot |
 | `SESSION_SECRET_KEY` | Yes | Secret key used for signed browser sessions |
+| `OPENAI_MODEL` | Yes | The OpenAI model used by the chatbot |
 | `APP_HOST` | No | Host used when running the app through `python -m ai_project_coach_chatbot.main` |
 | `APP_PORT` | No | Port used when running the app through `python -m ai_project_coach_chatbot.main` |
 
